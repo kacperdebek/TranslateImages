@@ -7,6 +7,10 @@
     <param name="onload" value="true"/>
   </feature>
 
+  <feature name="Insomnia">
+    <param name="android-package" value="nl.xservices.plugins.Insomnia"/>
+  </feature>
+
   <feature name="Textocr">
     <param name="android-package" value="com.neutrinos.ocrplugin.Textocr"/>
   </feature>

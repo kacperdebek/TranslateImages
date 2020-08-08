@@ -1,9 +1,10 @@
-<ion-header>
-  <ion-toolbar>
-    <ion-title>Translator</ion-title>
-  </ion-toolbar>
-</ion-header>
-
 <ion-content>
-<p>{{text}}</p>
+  <ion-item> 
+    <ion-label position="stacked">From</ion-label>
+    <ion-textarea rows="14" value={{text}}></ion-textarea>
+  </ion-item>
+  <ion-item>
+    <ion-label position="stacked">To</ion-label>
+    <ion-textarea rows="14" readonly value={{translated}}></ion-textarea>
+  </ion-item>
 </ion-content>

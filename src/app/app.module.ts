@@ -10,6 +10,7 @@ import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 import { CameraPreview } from '@ionic-native/camera-preview/ngx';
 import { OCR } from '@ionic-native/ocr/ngx';
+import { Insomnia } from '@ionic-native/insomnia/ngx';
 
 @NgModule({
   declarations: [AppComponent],
@@ -20,6 +21,7 @@ import { OCR } from '@ionic-native/ocr/ngx';
     SplashScreen,
     CameraPreview,
     OCR,
+    Insomnia,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
   ],
   bootstrap: [AppComponent]
