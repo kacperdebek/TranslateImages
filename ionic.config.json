@@ -1,0 +1,7 @@
+{
+  "name": "TranslateImages",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}
