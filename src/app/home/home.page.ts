@@ -1,7 +1,8 @@
 import { Component } from '@angular/core';
 import { Platform } from '@ionic/angular';
-import { CameraPreview, CameraPreviewPictureOptions, CameraPreviewOptions, CameraPreviewDimensions } from '@ionic-native/camera-preview/ngx';
+import { CameraPreview, CameraPreviewOptions } from '@ionic-native/camera-preview/ngx';
 import { OCR, OCRSourceType, OCRResult } from '@ionic-native/ocr/ngx';
+import { NavController } from '@ionic/angular';
 @Component({
   selector: 'app-home',
   templateUrl: 'home.page.html',
@@ -9,11 +10,8 @@ import { OCR, OCRSourceType, OCRResult } from '@ionic-native/ocr/ngx';
 })
 export class HomePage {
   picture: string;
-  constructor(private cameraPreview: CameraPreview, private platform: Platform, private ocr: OCR) {
-    this.platform.backButton.subscribeWithPriority(10, () => {
-      this.cameraPreview.stopCamera();
-    });
-    this.startCamera();
+  constructor(private cameraPreview: CameraPreview, private platform: Platform, private ocr: OCR, public navCtrl: NavController) {
+    
   }
   cameraPreviewOpts: CameraPreviewOptions = {
     x: 0,
@@ -34,7 +32,10 @@ export class HomePage {
   }
   analyzeImage(){
     this.ocr.recText(OCRSourceType.BASE64, this.picture)
-  .then((res: OCRResult) => console.log(JSON.stringify(res)))
+  .then((res: OCRResult) => this.navCtrl.navigateForward(['/translator', { text: JSON.stringify(res) }])).then(() => this.cameraPreview.stopCamera())
   .catch((error: any) => console.error(error));
+  }
+  ionViewWillEnter(){
+    this.startCamera();
   }
 }
