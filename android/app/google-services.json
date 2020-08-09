@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "342641804817",
+    "firebase_url": "https://translateimagespro.firebaseio.com",
+    "project_id": "translateimagespro",
+    "storage_bucket": "translateimagespro.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:342641804817:android:02e07ae1fe8b4f40de13b0",
+        "android_client_info": {
+          "package_name": "com.kapis.translateimages"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "342641804817-44sc0id4eejqrkjp6togoa8ff25a4mp9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCEasTBwefVguv7G-0QXmaQay1yz1hqPKo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "342641804817-44sc0id4eejqrkjp6togoa8ff25a4mp9.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

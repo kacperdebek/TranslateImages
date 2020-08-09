@@ -11,7 +11,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { CameraPreview } from '@ionic-native/camera-preview/ngx';
 import { OCR } from '@ionic-native/ocr/ngx';
 import { Insomnia } from '@ionic-native/insomnia/ngx';
-
+import { MLKitTranslate } from '@ionic-native/mlkit-translate/ngx';
 @NgModule({
   declarations: [AppComponent],
   entryComponents: [],
@@ -22,6 +22,7 @@ import { Insomnia } from '@ionic-native/insomnia/ngx';
     CameraPreview,
     OCR,
     Insomnia,
+    MLKitTranslate,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
   ],
   bootstrap: [AppComponent]
