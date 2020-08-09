@@ -1,10 +1,47 @@
 <ion-content>
-  <ion-item> 
-    <ion-label position="stacked">From</ion-label>
-    <ion-textarea rows="14" value={{text}}></ion-textarea>
-  </ion-item>
-  <ion-item>
-    <ion-label position="stacked">To</ion-label>
-    <ion-textarea rows="14" readonly value={{translated}}></ion-textarea>
-  </ion-item>
+  <ion-row>
+    <ion-col>
+      <ion-list>
+        <ion-item>
+          <ion-select [(ngModel)]="sourceLang" interface="popover" placeholder={{sourceLang}} >
+            <ion-select-option value="english">English</ion-select-option>
+            <ion-select-option value="polish">Polish</ion-select-option>
+            <ion-select-option value="german">German</ion-select-option>
+            <ion-select-option value="russian">Russian</ion-select-option>
+          </ion-select>
+        </ion-item>
+      </ion-list>
+    </ion-col>
+    <ion-col>
+      <ion-list>
+        <ion-item>
+          <ion-select [(ngModel)]="targetLang" interface="popover" placeholder={{targetLang}}>
+            <ion-select-option value="english">English</ion-select-option>
+            <ion-select-option value="polish">Polish</ion-select-option>
+            <ion-select-option value="german">German</ion-select-option>
+            <ion-select-option value="russian">Russian</ion-select-option>
+          </ion-select>
+        </ion-item>
+      </ion-list>
+    </ion-col>
+  </ion-row>
+  <ion-card>
+    <ion-item lines="none">
+      <ion-label position="stacked">{{sourceLang}}</ion-label>
+      <ion-textarea [(ngModel)]="text" rows="14" value={{text}} ></ion-textarea>
+    </ion-item>
+    <ion-card-content>
+      <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+        <ion-fab-button (click)=translateSource()>
+          <ion-icon name="chevron-forward-outline"></ion-icon>
+        </ion-fab-button>
+      </ion-fab>
+    </ion-card-content>
+  </ion-card>
+  <ion-card>
+    <ion-item>
+      <ion-label position="stacked">{{targetLang}}</ion-label>
+      <ion-textarea rows="14" value={{translated}} readonly></ion-textarea>
+    </ion-item>
+  </ion-card>
 </ion-content>
