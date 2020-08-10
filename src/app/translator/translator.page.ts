@@ -1,9 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Insomnia } from '@ionic-native/insomnia/ngx';
 import { MLKitTranslate } from '@ionic-native/mlkit-translate/ngx';
 import { LoadingController } from '@ionic/angular';
-
 @Component({
   selector: 'app-translator',
   templateUrl: './translator.page.html',
@@ -16,7 +15,14 @@ export class TranslatorPage implements OnInit {
   targetLang: string = "Polish";
   map: Map<string, string> = new Map<string, string>();
   currentLoading;
-  constructor(private route: ActivatedRoute, private insomnia: Insomnia, private mlkitTranslate: MLKitTranslate, public loadingController: LoadingController) {
+  constructor(private route: ActivatedRoute, private insomnia: Insomnia, private mlkitTranslate: MLKitTranslate,
+    public loadingController: LoadingController, private router: Router) {
+    this.route.queryParams.subscribe(params => {
+      if (this.router.getCurrentNavigation().extras.state) {
+        let json = JSON.parse(this.router.getCurrentNavigation().extras.state.text);
+        this.text = json.blocks.blocktext.join(" ");
+      }
+    });
     this.map.set("polish", "pl");
     this.map.set("english", "en");
     this.map.set("russian", "ru");
@@ -33,8 +39,6 @@ export class TranslatorPage implements OnInit {
         () => console.log('success'),
         () => console.log('error')
       );
-    let json = JSON.parse(this.route.snapshot.paramMap.get('text'));
-    this.text = json.blocks.blocktext.join(" ");
     this.translateSource();
   }
   translateSource() {
