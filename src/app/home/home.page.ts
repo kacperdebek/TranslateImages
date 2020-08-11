@@ -7,6 +7,7 @@ import { Insomnia } from '@ionic-native/insomnia/ngx';
 import { LoadingController } from '@ionic/angular';
 import { File } from '@ionic-native/file/ngx';
 import { NavigationExtras } from '@angular/router';
+import { AlertController } from '@ionic/angular';
 @Component({
   selector: 'app-home',
   templateUrl: 'home.page.html',
@@ -15,7 +16,8 @@ import { NavigationExtras } from '@angular/router';
 export class HomePage {
   picture: string;
   constructor(private cameraPreview: CameraPreview, private platform: Platform, private ocr: OCR,
-    public navCtrl: NavController, private insomnia: Insomnia, public loadingController: LoadingController, private file: File) {
+    public navCtrl: NavController, private insomnia: Insomnia, public loadingController: LoadingController,
+    private file: File, public alertController: AlertController) {
   }
   cameraPreviewOpts: CameraPreviewOptions = {
     x: 0,
@@ -45,10 +47,30 @@ export class HomePage {
   async analyzeImage() {
     await this.ocr.recText(OCRSourceType.NORMFILEURL, this.file.dataDirectory + 'analyzed.png')
       .then((res: OCRResult) => {
-        let navigationExtras: NavigationExtras = { state: { text: JSON.stringify(res) } };
-        this.navCtrl.navigateForward(['/translator'], navigationExtras)
-      }).then(() => this.cameraPreview.stopCamera())
+        if (res.foundText) {
+          let navigationExtras: NavigationExtras = { state: { text: JSON.stringify(res) } };
+          this.navCtrl.navigateForward(['/translator'], navigationExtras).then(() => this.cameraPreview.stopCamera())
+        }
+        else {
+          this.cameraPreview.stopCamera().then(() => {
+            this.presentAlert();
+          })
+
+        }
+      })
       .catch((error: any) => console.error(error));
+  }
+  async presentAlert() {
+    const alert = await this.alertController.create({
+      header: 'Error',
+      message: 'Unable to detect text, please try again.',
+      buttons: ['OK']
+    });
+    alert.onDidDismiss()
+      .then(() => {
+        this.startCamera();
+      })
+    await alert.present();
   }
   ionViewWillEnter() {
     this.insomnia.keepAwake()
@@ -77,4 +99,3 @@ export class HomePage {
     return new Blob(byteArrays, { type: contentType });
   }
 }
-//file:///data/user/0/com.kapis.translateimages/files/
