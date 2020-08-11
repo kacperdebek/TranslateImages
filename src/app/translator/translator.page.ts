@@ -58,15 +58,15 @@ export class TranslatorPage implements OnInit {
     loading.present().then(() => {
       this.mlkitTranslate.getDownloadedModels().then(availableModels => {
         let areAvailable;
-        if (availableModels.some(item => (item.code === this.map.get(this.targetLang.toLowerCase())))) {
-          if (availableModels.some(item => (item.code === this.map.get(this.sourceLang.toLowerCase())))) {
+        if (availableModels.some(item => (item.code === this.map.get(this.targetLang.toLowerCase()))) && this.map.get(this.targetLang.toLowerCase()) !== "en") {
+          if (availableModels.some(item => (item.code === this.map.get(this.sourceLang.toLowerCase()))) && this.map.get(this.targetLang.toLowerCase()) !== "en") {
             areAvailable = 3;
           }
           else {
             areAvailable = 1;
           }
         }
-        else if (availableModels.some(item => (item.code === this.map.get(this.sourceLang.toLowerCase())))) {
+        else if (availableModels.some(item => (item.code === this.map.get(this.sourceLang.toLowerCase()))) && this.map.get(this.targetLang.toLowerCase()) !== "en") {
           areAvailable = 2;
         }
         else {
