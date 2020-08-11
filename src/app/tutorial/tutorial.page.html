@@ -1,0 +1,26 @@
+<ion-content>
+  <ion-slides #slides pager="true" (ionSlideDidChange)="slideChanged()">
+    <ion-slide class="step-one">
+      <ion-img src="/assets/slides/slide1.png"></ion-img>
+      <h2>Use the app to instantly translate text on images taken with your camera</h2>
+    </ion-slide>
+
+    <ion-slide class="step-two">
+      <h4>Language packs need to be downloaded before using them.<br>Select desired languages</h4>
+      <ion-list>
+         <ion-item *ngFor="let item of languages; let i = index">
+          <ion-img src="/assets/flags/{{item.code}}.png" width="42" height="30"></ion-img>
+          <ion-label style="padding-left: 10px;">{{item.name | titlecase}}</ion-label>
+          <ion-toggle [(ngModel)]="item.toggled"></ion-toggle>
+        </ion-item>
+      </ion-list>
+      <ion-button (click)=confirm()>Confirm</ion-button>
+    </ion-slide>
+
+    <ion-slide class="step-three">
+      <ion-img src="/assets/slides/slide3.png"></ion-img>
+      <h4>Missing language packs can still be downloaded during translation!</h4>
+      <ion-button (click)=finish() >Finish</ion-button>
+    </ion-slide>
+  </ion-slides>
+</ion-content>

@@ -74,7 +74,7 @@ export class TranslatorPage implements OnInit {
         }
         return areAvailable;
       }).then(async (areAvailable) => {
-        if (areAvailable != 3) {
+        if (areAvailable !== 3) {
           loading.dismiss().then(async () => {
             const downloading = await this.loadingController.create({ message: 'Downloading models...' });
             downloading.present().then(() => {
@@ -90,7 +90,7 @@ export class TranslatorPage implements OnInit {
               }
               else if (areAvailable === 0) {
                 this.mlkitTranslate.downloadModel(this.map.get(this.targetLang.toLowerCase())).then(() => {
-                  this.mlkitTranslate.downloadModel(this.map.get(this.targetLang.toLowerCase())).then(() => {
+                  this.mlkitTranslate.downloadModel(this.map.get(this.sourceLang.toLowerCase())).then(() => {
                     downloading.dismiss();
                   })
                 })
