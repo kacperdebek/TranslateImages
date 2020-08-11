@@ -13,7 +13,32 @@ export class TranslatorPage implements OnInit {
   translated: string = " ";
   sourceLang: string = "English";
   targetLang: string = "Polish";
-  map: Map<string, string> = new Map<string, string>();
+  languages: any = [
+    {
+      "name": "English",
+      "code": "en",
+    },
+    {
+      "name": "Spanish",
+      "code": "es",
+    },
+    {
+      "name": "Russian",
+      "code": "ru",
+    },
+    {
+      "name": "French",
+      "code": "fr",
+    },
+    {
+      "name": "Polish",
+      "code": "pl",
+    },
+    {
+      "name": "German",
+      "code": "de",
+    }
+  ];
   currentLoading;
   constructor(private route: ActivatedRoute, private insomnia: Insomnia, private mlkitTranslate: MLKitTranslate,
     public loadingController: LoadingController, private router: Router) {
@@ -23,14 +48,23 @@ export class TranslatorPage implements OnInit {
         this.text = json.blocks.blocktext.join(" ");
       }
     });
-    this.map.set("polish", "pl");
-    this.map.set("english", "en");
-    this.map.set("russian", "ru");
-    this.map.set("german", "de");
-    this.map.set("french", "fr");
-    this.map.set("spanish", "es");
   }
-
+  findLanguageByCode(code: string): string {
+    for (let element of this.languages) {
+      if (element.code === code) {
+        return element.name;
+      }
+    }
+    return "n/a";
+  }
+  findCodeByLanguageName(name: string): string {
+    for (let element of this.languages) {
+      if (element.name === name) {
+        return element.code;
+      }
+    }
+    return "n/a";
+  }
   ngOnInit() {
   }
   ionViewWillEnter() {
@@ -42,9 +76,14 @@ export class TranslatorPage implements OnInit {
     this.translateSource();
   }
   translateSource() {
-    this.areModelsDownloaded();
-    this.mlkitTranslate.translate(this.text, this.map.get(this.targetLang.toLowerCase()), this.map.get(this.sourceLang.toLowerCase())).then(translatedText => {
-      this.translated = translatedText;
+    this.mlkitTranslate.identifyLanguage(this.text).then((lang) => {
+      this.sourceLang = this.findLanguageByCode(lang.code);
+    }).then(() => {
+      this.areModelsDownloaded().then(() => {
+        this.mlkitTranslate.translate(this.text, this.findCodeByLanguageName(this.targetLang), this.findCodeByLanguageName(this.sourceLang)).then(translatedText => {
+          this.translated = translatedText;
+        })
+      });
     })
   }
   sourceChange($event) {
@@ -58,15 +97,15 @@ export class TranslatorPage implements OnInit {
     loading.present().then(() => {
       this.mlkitTranslate.getDownloadedModels().then(availableModels => {
         let areAvailable;
-        if (availableModels.some(item => (item.code === this.map.get(this.targetLang.toLowerCase()))) && this.map.get(this.targetLang.toLowerCase()) !== "en") {
-          if (availableModels.some(item => (item.code === this.map.get(this.sourceLang.toLowerCase()))) && this.map.get(this.targetLang.toLowerCase()) !== "en") {
+        if (availableModels.some(item => (item.code === this.findCodeByLanguageName(this.targetLang)) && this.findCodeByLanguageName(this.targetLang) !== "en")) {
+          if (availableModels.some(item => (item.code === this.findCodeByLanguageName(this.sourceLang)) && this.findCodeByLanguageName(this.sourceLang) !== "en")) {
             areAvailable = 3;
           }
           else {
             areAvailable = 1;
           }
         }
-        else if (availableModels.some(item => (item.code === this.map.get(this.sourceLang.toLowerCase()))) && this.map.get(this.targetLang.toLowerCase()) !== "en") {
+        else if (availableModels.some(item => (item.code === this.findCodeByLanguageName(this.sourceLang)) && this.findCodeByLanguageName(this.sourceLang) !== "en")) {
           areAvailable = 2;
         }
         else {
@@ -79,18 +118,18 @@ export class TranslatorPage implements OnInit {
             const downloading = await this.loadingController.create({ message: 'Downloading models...' });
             downloading.present().then(() => {
               if (areAvailable === 1) {
-                this.mlkitTranslate.downloadModel(this.map.get(this.sourceLang.toLowerCase())).then(() => {
+                this.mlkitTranslate.downloadModel(this.findCodeByLanguageName(this.sourceLang)).finally(() => {
                   downloading.dismiss();
                 })
               }
               else if (areAvailable === 2) {
-                this.mlkitTranslate.downloadModel(this.map.get(this.targetLang.toLowerCase())).then(() => {
+                this.mlkitTranslate.downloadModel(this.findCodeByLanguageName(this.targetLang)).finally(() => {
                   downloading.dismiss();
                 })
               }
               else if (areAvailable === 0) {
-                this.mlkitTranslate.downloadModel(this.map.get(this.targetLang.toLowerCase())).then(() => {
-                  this.mlkitTranslate.downloadModel(this.map.get(this.sourceLang.toLowerCase())).then(() => {
+                this.mlkitTranslate.downloadModel(this.findCodeByLanguageName(this.targetLang)).then(() => {
+                  this.mlkitTranslate.downloadModel(this.findCodeByLanguageName(this.sourceLang)).finally(() => {
                     downloading.dismiss();
                   })
                 })
