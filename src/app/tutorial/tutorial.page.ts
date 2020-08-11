@@ -3,6 +3,7 @@ import { Storage } from '@ionic/storage';
 import { Router } from '@angular/router';
 import { IonSlides } from '@ionic/angular';
 import { AlertController } from '@ionic/angular';
+import { MLKitTranslate } from '@ionic-native/mlkit-translate/ngx';
 @Component({
   selector: 'app-tutorial',
   templateUrl: './tutorial.page.html',
@@ -12,6 +13,7 @@ import { AlertController } from '@ionic/angular';
 export class TutorialPage {
   @ViewChild('slides') slides: IonSlides;
   slideOptions: any;
+  confirmed: boolean = false;
   english: boolean;
   spanish: boolean;
   russian: boolean;
@@ -22,48 +24,72 @@ export class TutorialPage {
     {
       "name": "english",
       "code": "en",
-      "toggled": false
+      "toggled": false,
+      "downloaded": false
     },
     {
       "name": "spanish",
       "code": "es",
-      "toggled": false
+      "toggled": false,
+      "downloaded": false
     },
     {
       "name": "russian",
       "code": "ru",
-      "toggled": false
+      "toggled": false,
+      "downloaded": false
     },
     {
       "name": "french",
       "code": "fr",
-      "toggled": false
+      "toggled": false,
+      "downloaded": false
     },
     {
       "name": "polish",
       "code": "pl",
-      "toggled": false
+      "toggled": false,
+      "downloaded": false
     },
     {
       "name": "german",
       "code": "de",
-      "toggled": false
+      "toggled": false,
+      "downloaded": false
     }
   ];
-  constructor(private storage: Storage, private router: Router, public alertController: AlertController) {
+  constructor(private storage: Storage, private router: Router, public alertController: AlertController,
+    private mlkitTranslate: MLKitTranslate) {
 
   }
   async finish() {
     await this.storage.set('tutorialComplete', true);
     this.router.navigateByUrl('/');
   }
+  downloadModels() {
+    this.slides.lockSwipes(true);
+    let promiseStack = [];
+    for (let lang of this.languages) {
+      if (lang.toggled === true) {
+        promiseStack.push(this.mlkitTranslate.downloadModel(lang.code).then(()=>{
+          lang.downloaded = true;
+        }));
+      }
+    }
+    Promise.all(promiseStack).then(()=>{
+      this.slides.lockSwipes(false);
+      this.slides.slideNext();
+      this.slides.lockSwipes(true);
+    })
+  } //TODO: default languages selector
   confirm() {
     let success = false;
     for (let status of this.languages) {
       if (status.toggled === true) {
+        this.confirmed = true;
         success = true;
-        this.slides.lockSwipeToNext(false);
-        this.slides.slideNext();
+        this.downloadModels();
+        return;
       }
     }
     if (!success) {

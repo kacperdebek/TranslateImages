@@ -73,18 +73,21 @@ export class TranslatorPage implements OnInit {
         () => console.log('success'),
         () => console.log('error')
       );
-    this.translateSource();
+    this.detectLanguage().then(() => {
+      this.translateSource();
+    })
+  }
+  async detectLanguage() {
+    await this.mlkitTranslate.identifyLanguage(this.text).then((lang) => {
+      this.sourceLang = this.findLanguageByCode(lang.code);
+    })
   }
   translateSource() {
-    this.mlkitTranslate.identifyLanguage(this.text).then((lang) => {
-      this.sourceLang = this.findLanguageByCode(lang.code);
-    }).then(() => {
-      this.areModelsDownloaded().then(() => {
-        this.mlkitTranslate.translate(this.text, this.findCodeByLanguageName(this.targetLang), this.findCodeByLanguageName(this.sourceLang)).then(translatedText => {
-          this.translated = translatedText;
-        })
-      });
-    })
+    this.areModelsDownloaded().then(() => {
+      this.mlkitTranslate.translate(this.text, this.findCodeByLanguageName(this.targetLang), this.findCodeByLanguageName(this.sourceLang)).then(translatedText => {
+        this.translated = translatedText;
+      })
+    });
   }
   sourceChange($event) {
     this.translateSource()
@@ -97,15 +100,15 @@ export class TranslatorPage implements OnInit {
     loading.present().then(() => {
       this.mlkitTranslate.getDownloadedModels().then(availableModels => {
         let areAvailable;
-        if (availableModels.some(item => (item.code === this.findCodeByLanguageName(this.targetLang)) && this.findCodeByLanguageName(this.targetLang) !== "en")) {
-          if (availableModels.some(item => (item.code === this.findCodeByLanguageName(this.sourceLang)) && this.findCodeByLanguageName(this.sourceLang) !== "en")) {
+        if (availableModels.some(item => (item.code === this.findCodeByLanguageName(this.targetLang)) || this.targetLang === "English")) {
+          if (availableModels.some(item => (item.code === this.findCodeByLanguageName(this.sourceLang)) || this.sourceLang === "English")) {
             areAvailable = 3;
           }
           else {
             areAvailable = 1;
           }
         }
-        else if (availableModels.some(item => (item.code === this.findCodeByLanguageName(this.sourceLang)) && this.findCodeByLanguageName(this.sourceLang) !== "en")) {
+        else if (availableModels.some(item => (item.code === this.findCodeByLanguageName(this.sourceLang)) || this.sourceLang === "English")) {
           areAvailable = 2;
         }
         else {
