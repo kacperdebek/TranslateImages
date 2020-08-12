@@ -1,6 +1,6 @@
 {
   "appId": "com.kapis.translateimages",
-  "appName": "TranslateImages",
+  "appName": "Translate Images",
   "bundledWebRuntime": false,
   "npmClient": "npm",
   "webDir": "www",
