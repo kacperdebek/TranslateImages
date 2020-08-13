@@ -1,11 +1,16 @@
 <ion-content>
+  <ion-list>
+    <ion-item lines="none" style="padding: 20px;" >
+      <ion-fab-button (click)="openCamera()">
+        <ion-icon style="padding: 10px; font-size: 70px;" name="aperture-outline"></ion-icon>
+        <ion-label class="ion-text-wrap">Take a picture</ion-label>
+      </ion-fab-button>
+    </ion-item>
+    <ion-item lines="none">
+      <ion-fab-button>
+        <ion-icon style="padding: 10px; font-size: 70px;" name="image-outline"></ion-icon>
+        <ion-label class="ion-text-wrap">Upload a picture</ion-label>
+      </ion-fab-button>
+    </ion-item>
+  </ion-list>
 </ion-content>
-<ion-footer>
-  <ion-row>
-    <ion-col class="ion-no-padding">
-      <ion-button expand="full" class="ion-no-margin" (click)=takePicture()>
-        <ion-icon name="camera-outline"></ion-icon>
-      </ion-button>
-    </ion-col>
-  </ion-row>
-</ion-footer>
